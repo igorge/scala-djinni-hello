@@ -1,0 +1,8 @@
+hello_world = interface +c {
+    do_hello_world(key: string): i32;
+}
+
+
+hello_world_maker = interface +c {
+    static make(v: i32): hello_world;
+}
