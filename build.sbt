@@ -4,7 +4,7 @@ sbtVersion := "0.13.13"
 
 fork in run := true
 
-javaOptions in run += "-Djava.library.path=/home/gie/develop/test/scala-djinni-hello/src/main/cpp/cmake-build-debug"
+javaOptions in run += "-Djava.library.path=src/main/cpp/cmake-build-debug"
 
 version := "0.1"
 
