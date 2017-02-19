@@ -15,6 +15,6 @@ scalacOptions := Seq("-optimise", "-Xlint", "-unchecked", "-deprecation", "-enco
 libraryDependencies += "biz.enef" %% "slogging" % "0.5.2"
 
 
-sourceGenerators in Compile += Def.task {
-    Djinni.djinni((sourceManaged in Compile).value / "demo")
-}.taskValue
+//sourceGenerators in Compile += Def.task {
+//    Djinni.djinni((sourceManaged in Compile).value / "demo")
+//}.taskValue
