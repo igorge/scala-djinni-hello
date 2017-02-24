@@ -8,7 +8,7 @@ set(proj_exe_name hello_world_jni)
 #set(CMAKE_AR "gcc-ar")
 #set(CMAKE_RANLIB "gcc-ranlib")
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -Wall -Wextra -Wno-deprecated -Wno-unused-parameter")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -Wall -Wextra -Wno-deprecated -Wno-unused-parameter -fPIC")
 
 #find_package(Boost COMPONENTS filesystem system thread program_options serialization date_time locale)
 ############################################################################
@@ -36,39 +36,36 @@ endif ()
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pg")
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-c++1z-extensions")
 ############################################################################
-#add_subdirectory(../../libgie/ ${PROJECT_BINARY_DIR}/extlib/gie )
+set(DJINNI_MODULE ../../../modules/djinni_jni)
 
-#set(gie_include_dir ${gie_include_dir} ${libgie_SOURCE_DIR}/include)
-#set(gie_link_libs ${gie_link_libs} libgie)
-
-#set(gie_link_osg_libs osg osgDB osgViewer osgUtil)
+add_subdirectory(${DJINNI_MODULE} ${PROJECT_BINARY_DIR}/modules/djinni_jni)
 ############################################################################
 
-find_package(JNI)
+get_directory_property(
+        DJINNI_INCLUDE_DIRS
+        DIRECTORY ${DJINNI_MODULE}
+        DEFINITION DJINNI_INCLUDE_DIRS)
 
-if (JNI_FOUND)
-    message (STATUS "JNI_INCLUDE_DIRS=${JNI_INCLUDE_DIRS}")
-    message (STATUS "JNI_LIBRARIES=${JNI_LIBRARIES}")
-endif()
+#message (STATUS "djinni_jni_SOURCE_DIR=${djinni_jni_SOURCE_DIR}")
+#message (STATUS "DJINNI_INCLUDE_DIRS=${DJINNI_INCLUDE_DIRS}")
 
-############################################################################
 
 include_directories(
-        ${CMAKE_CURRENT_BINARY_DIR} ${Boost_INCLUDE_DIRS} ${PROJECT_SOURCE_DIR} ${JNI_INCLUDE_DIRS} ${PROJECT_SOURCE_DIR}/support-lib/jni ${gie_include_dir} )
+        ${CMAKE_CURRENT_BINARY_DIR}
+        ${PROJECT_SOURCE_DIR}
+        ${DJINNI_INCLUDE_DIRS}
+)
 
 ############################################################################
-
 
 set(SOURCE_FILES
         main.cpp
         generated/jni/hello_world.cpp
         generated/jni/hello_world_maker.cpp
-        support-lib/jni/djinni_main.cpp
-        support-lib/jni/djinni_support.cpp)
+        ${djinni_jni_SOURCE_DIR}/src/support-lib/jni/djinni_main.cpp)
 
 ############################################################################
 
 add_library(${proj_exe_name} SHARED ${SOURCE_FILES})
 
-target_link_libraries(
-        ${proj_exe_name} )
+target_link_libraries(${proj_exe_name} djinni_jni)
